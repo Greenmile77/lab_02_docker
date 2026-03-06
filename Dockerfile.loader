@@ -1,0 +1,14 @@
+FROM python:3.10-slim
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN addgroup --gid 1000 --system appuser && \
+    adduser --uid 1000 --system --gid 1000 appuser
+
+WORKDIR /app
+COPY --chown=appuser:appuser scripts/loader.py /app/loader.py
+
+USER appuser
+
+CMD ["python", "/app/loader.py"]
